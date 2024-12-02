@@ -1,0 +1,180 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taskify - My Tasks</title>
+    <style>
+             body {
+            background-color: #1e1e2f;
+
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+                 padding: 20px;
+        }
+
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #4caf50;
+            font-family: 'Arial', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            user-select: none;
+        }
+
+        .logo:hover {
+            cursor: pointer;
+            transition: ease-in-out;
+            color: lightgreen;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        form input[type="text"],
+        form input[type="date"],
+        form select {
+            padding: 10px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #3a3a4e;
+            color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        form input:hover,
+        form select:hover {
+            background-color: #4a4a5e;
+        }
+
+        form button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #4caf50;
+            color: #ffffff;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            background-color: #2a2a3b;
+            margin-bottom: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.2s ease;
+        }
+
+        ul li:hover {
+            transform: scale(1.02);
+        }
+
+        ul li strong {
+            font-size: 18px;
+        }
+
+        ul li form {
+            display: inline;
+        }
+
+        ul li select {
+            margin-left: 10px;
+        }
+
+        ul li button {
+            margin-left: 10px;
+        }
+
+        .logout-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #ff4b5c;
+            color: #ffffff;
+            font-weight: bold;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center;
+            width: 100px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .logout-button:hover {
+            background-color: #ff2e3a;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Logo Section -->
+    <div class="logo">Taskify</div>
+
+    <!-- Task List Section -->
+    <h2>My Tasks</h2>
+    <form method="post" action="/Task/Create">
+        <input type="text" name="title" placeholder="Task Title" required>
+        <input type="date" name="startDate" required>
+        <button type="submit">Add Task</button>
+    </form>
+    <ul>
+        @foreach (var task in Model)
+        {
+            <li>
+                <span>
+                    <strong>@task.Title</strong> - @task.StartDate.ToShortDateString()
+                    [Status: @task.Status]
+                </span>
+                <div>
+                    <form method="post" action="/Task/Delete">
+                        <input type="hidden" name="id" value="@task.Id">
+                        <button type="submit">Delete</button>
+                    </form>
+                    <form method="post" action="/Task/UpdateStatus">
+                        <input type="hidden" name="id" value="@task.Id">
+                        <select name="status">
+                            <option value="Pending" selected="@(task.Status == "Pending")">Pending</option>
+                            <option value="Complete" selected="@(task.Status == "Complete")">Complete</option>
+                        </select>
+                        <button type="submit">Update</button>
+                    </form>
+                </div>
+            </li>
+        }
+    </ul>
+    <form action="/User/Logout" method="post">
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+</body>
+</html>
